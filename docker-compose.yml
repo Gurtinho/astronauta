@@ -11,7 +11,7 @@ services:
     environment:
       - POSTGRES_HOST=localhost
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=sa1234
+      - POSTGRES_PASSWORD=505
       - POSTGRES_DB=astronauta
     volumes:
       - pgdata:/data/postgres

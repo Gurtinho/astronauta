@@ -8,6 +8,7 @@
     "bot": "ts-node-dev --inspect -r tsconfig-paths/register --respawn --transpile-only src/bot.ts"
   },
   "dependencies": {
+    "@prisma/client": "^4.15.0",
     "axios": "^1.4.0",
     "bad-words": "^3.0.4",
     "bcryptjs": "^2.4.3",

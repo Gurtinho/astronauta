@@ -21,11 +21,7 @@ const bot = async () => {
         client.registerModules();
         client.registerEvents();
         client.user?.setPresence({
-            status: 'online',
-            activity: {
-                name: 'Vagando pelo universo...',
-                type: 'WATCHING',
-            }
+            status: 'online'
         } as IActivity);
     } catch (error) {
         console.log(`🔴 An error occurred ${error}`.red);
