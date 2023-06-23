@@ -6,3 +6,104 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// Model de configurações gerais do bot
+model Configuration {
+  id          String    @id @default(uuid())
+  guild       String
+  bardwords   Boolean
+  antilinks   Boolean
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+  
+  @@map("configuration")
+}
+
+// Model de mensagens de boas vindas
+model Welcome {
+  id          String    @id @default(uuid())
+  guild       String
+  channel     String
+  message     String?
+  description String?
+  role        String?
+  image       String?
+  reason      String?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+
+  @@map("welcome")
+}
+
+// Model de mensagens de saída
+model Leave {
+  id          String    @id @default(uuid())
+  guild       String
+  channel     String
+  message     String?
+  description String?
+  role        String?
+  image       String?
+  reason      String?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+
+  @@map("leave")
+}
+
+// Model de mensagens de punição de membros
+model Punishment {
+  id          String    @id @default(uuid())
+  guild       String
+  channel     String
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+  
+  @@map("punishment")
+}
+
+
+// Model de mensagens do tópico do chat
+model Topic {
+  id          String    @id @default(uuid())
+  guild       String
+  channel     String
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+
+  @@map("topic")
+}
+
+
+// Model de dados do usuário
+model User {
+  id          String    @id
+  money_id    String?
+  bag_id      String?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+
+  @@map("user")
+}
+
+
+// Model da bag do usuário
+model Money {
+  id          String    @id @default(uuid())
+  fragments   Int?
+  gems        Int?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+
+  @@map("money")
+}
+
+
+model Bag {
+  id          String    @id @default(uuid())
+  achivments  String?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+
+  @@map("bag")
+}
