@@ -8,7 +8,7 @@ import {
 	PermissionFlagsBits,
 	Role,
 } from 'discord.js'
-import { client } from '@src/index'
+import { client } from '../../index'
 
 type IGuildMember = Pick<GuildMember, 'roles'> &
 	GuildMemberRoleManager & {
