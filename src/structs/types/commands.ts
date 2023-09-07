@@ -1,4 +1,4 @@
-import { ClientBot } from '.././client';
+import { ClientBot } from '../client';
 import {
     CommandInteractionOptionResolver, ApplicationCommandData, CommandInteraction,
 } from 'discord.js';
