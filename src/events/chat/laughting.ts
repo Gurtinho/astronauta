@@ -2,6 +2,8 @@ import { Events } from '@src/structs/types/events';
 
 const lastMessageTimes = new Map();
 
+const emojis = [];
+
 export default new Events({
     name: 'messageCreate',
     async run(message) {

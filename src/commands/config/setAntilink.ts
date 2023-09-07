@@ -1,5 +1,8 @@
 import { Command } from '@src/structs/types/commands';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export default new Command({
     name: 'set-antilinks',
@@ -8,6 +11,13 @@ export default new Command({
     defaultMemberPermissions: ['Administrator'],
     async run({interaction, options}) {
         if (!interaction.inCachedGuild()) return;
+        try {
 
+        } catch (error) {
+            return interaction.reply({
+                content: 'Ocorreu um erro ao tentar setar a configuração de antilinks.',
+                ephemeral: true
+            });
+        }
     }
 });

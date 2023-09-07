@@ -77,9 +77,9 @@ model Topic {
 
 // Model de dados do usuário
 model User {
-  id          String    @id
-  money_id    String?
-  bag_id      String?
+  id          String    @id @default(uuid())
+  money       Money?
+  bag         Bag?
   created_at  DateTime  @default(now())
   updated_at  DateTime  @default(now())
 
@@ -92,6 +92,8 @@ model Money {
   id          String    @id @default(uuid())
   fragments   Int?
   gems        Int?
+  user        User      @relation(fields: [user_id], references: [id])
+  user_id     String    @unique
   created_at  DateTime  @default(now())
   updated_at  DateTime  @default(now())
 
@@ -102,8 +104,19 @@ model Money {
 model Bag {
   id          String    @id @default(uuid())
   achivments  String?
+  user        User      @relation(fields: [user_id], references: [id])
+  user_id     String    @unique
   created_at  DateTime  @default(now())
   updated_at  DateTime  @default(now())
 
   @@map("bag")
+}
+
+model ReactionRoles {
+  id          String    @id @default(uuid())
+  guild       String
+  roles       String[]
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now())
+  @@map("reactionroles")
 }

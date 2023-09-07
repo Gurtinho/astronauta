@@ -1,7 +1,7 @@
 import { Command } from '@src/structs/types/commands';
 import {
-    ApplicationCommandOptionType, ChannelType, EmbedBuilder, GuildBasedChannel, GuildChannel,
-    GuildMember, GuildMemberRoleManager, PermissionFlagsBits, PermissionOverwrites, Role
+    ApplicationCommandOptionType, ChannelType, EmbedBuilder,
+    GuildMember, GuildMemberRoleManager, PermissionFlagsBits, Role
 } from 'discord.js';
 import { client } from '@src/bot';
 

@@ -1,4 +1,3 @@
-import { PunishmentModel } from '@src/models/punishmentModel';
 import { Command } from '@src/structs/types/commands';
 import {
     ApplicationCommandOptionType,

@@ -1,5 +1,5 @@
 import { Command } from '@src/structs/types/commands';
-import { ApplicationCommandOptionType, ApplicationCommandType, ChannelType, Message, PartialMessage } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, ChannelType } from 'discord.js';
 
 export default new Command({
     name: 'clear',

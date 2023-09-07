@@ -1,12 +1,14 @@
 import { Command } from '@src/structs/types/commands';
+import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 
 export default new Command({
-    name: 'dice',
-    description: 'jogue os dados',
+    name: 'removerole',
+    description: 'memes do reddit',
+    type: ApplicationCommandType.ChatInput,
+    defaultMemberPermissions: ['ManageRoles'],
     async run({ interaction }) {
         try {
-            const result = Math.floor(Math.random() * 6) + 1;
-            interaction.reply({ content: `O resultado do dado foi ${result}!` });
+            
         } catch (error) {
             console.log(`🔴 An error occurred ${error}`.red);
         }

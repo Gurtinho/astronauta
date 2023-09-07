@@ -1,6 +1,8 @@
 import { Command } from '@src/structs/types/commands';
-import { WelcomeModel } from '@src/models/welcomeModel';
 import { ApplicationCommandOptionType, PermissionFlagsBits } from 'discord.js';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export default new Command({
     name: 'set-leave',
@@ -42,28 +44,35 @@ export default new Command({
         const welcomeDescription = options.getString('description');
         const welcomeRole = options.getRole('role');
         const welcomeImage = options.getString('image');
-        if (!interaction.guild.members.me?.permissions.has(PermissionFlagsBits.SendMessages)) {
-            interaction.reply({
-                content: `Você não possui permissão pra fazer isso`,
-                ephemeral: true
-            });
-        }
-        const welcomeData = await WelcomeModel.findOne({ guild: interaction.guild.id }).exec();
-        if (!welcomeData) {
-            const welcomeCreated = await WelcomeModel.create({
-                guild: interaction.guild.id,
-                channel: welcomeChannel.id,
-                message: welcomeMessage,
-                description: welcomeDescription,
-                role: welcomeRole?.id,
-                image: welcomeImage
-            });
-            if (welcomeCreated) {
-                await interaction.reply({
-                    content: `Canal de boas vindas configurado com sucesso`,
+        try {
+            if (!interaction.guild.members.me?.permissions.has(PermissionFlagsBits.SendMessages)) {
+                interaction.reply({
+                    content: `Você não possui permissão pra fazer isso`,
                     ephemeral: true
                 });
             }
+            // const welcomeData = await WelcomeModel.findOne({ guild: interaction.guild.id }).exec();
+            // if (!welcomeData) {
+            //     const welcomeCreated = await WelcomeModel.create({
+            //         guild: interaction.guild.id,
+            //         channel: welcomeChannel.id,
+            //         message: welcomeMessage,
+            //         description: welcomeDescription,
+            //         role: welcomeRole?.id,
+            //         image: welcomeImage
+            //     });
+            //     if (welcomeCreated) {
+            //         await interaction.reply({
+            //             content: `Canal de boas vindas configurado com sucesso`,
+            //             ephemeral: true
+            //         });
+            //     }
+            // }
+        } catch (error) {
+            return interaction.reply({
+                content: 'Ocorreu um erro ao tentar setar o canal de saída.',
+                ephemeral: true
+            });
         }
     }
 });

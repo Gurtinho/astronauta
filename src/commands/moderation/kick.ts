@@ -1,11 +1,11 @@
-import { PunishmentModel } from '@src/models/punishmentModel';
 import { Command } from '@src/structs/types/commands';
 import {
-    APIEmbed,
-    ApplicationCommandOptionType,
-    EmbedBuilder,
+    APIEmbed, ApplicationCommandOptionType, EmbedBuilder,
     GuildMember, GuildMemberRoleManager, JSONEncodable, Role, TextChannel
 } from 'discord.js';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 type IGuildMember = Pick<GuildMember, 'roles'> & GuildMemberRoleManager & {
     highest: Role;
@@ -28,9 +28,9 @@ export default new Command({
         }
     ],
     async run({ interaction, options }) {
+        if (!interaction.inCachedGuild()) return;
         const user = options.getUser('user');
         const reason = options.getString('reason');
-
         const memberToKick = await interaction.guild?.members.fetch(user!.id);
 
         if (!memberToKick) {
@@ -50,10 +50,12 @@ export default new Command({
         }
 
         try {
-            const punishmentData = await PunishmentModel.findOne({
-                channel: interaction.channelId
-            }).exec();
-
+            await prisma.$connect();
+            const punishmentData = await prisma.punishment.findFirst({
+                where: {
+                    guild: interaction.guild.id
+                },
+            });
             await memberToKick.kick();
 
             if (punishmentData?.channel) {
@@ -78,7 +80,7 @@ export default new Command({
                     msg.delete();
                 }, 3000);
             }
-
+            await prisma.$disconnect();
         } catch (error) {
             console.error(error);
             return interaction.reply({

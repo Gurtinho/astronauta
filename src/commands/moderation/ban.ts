@@ -1,11 +1,11 @@
-import { PunishmentModel } from '@src/models/punishmentModel';
 import { Command } from '@src/structs/types/commands';
 import {
-    APIEmbed,
-    ApplicationCommandOptionType,
-    EmbedBuilder,
-    GuildMember, GuildMemberRoleManager, JSONEncodable, Role, TextChannel
+    APIEmbed, ApplicationCommandOptionType, EmbedBuilder,
+    GuildMember, GuildMemberRoleManager, JSONEncodable, Role, TextChannel,
 } from 'discord.js';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export type IGuildMember = Pick<GuildMember, 'roles'> & GuildMemberRoleManager & {
     highest: Role;
@@ -29,9 +29,9 @@ export default new Command({
         }
     ],
     async run({ interaction, options }) {
+        if (!interaction.inCachedGuild()) return;
         const user = options.getUser('user');
         const reason = options.getString('reason');
-
         const memberToKick = await interaction.guild?.members.fetch(user!.id);
 
         if (!memberToKick) {
@@ -43,18 +43,20 @@ export default new Command({
 
         const authorRoles = interaction.member?.roles as IGuildMember;
 
-        if (memberToKick.roles.highest.position >= authorRoles.highest.position) {
-            return interaction.reply({
-                content: 'Você não pode banir um membro com cargo igual ou superior ao seu.',
-                ephemeral: true,
-            });
-        }
-
         try {
-            const punishmentData = await PunishmentModel.findOne({
-                channel: interaction.channelId
-            }).exec();
-
+            await prisma.$connect();
+            if (memberToKick.roles.highest.position >= authorRoles.highest.position) {
+                return interaction.reply({
+                    content: 'Você não pode banir um membro com cargo igual ou superior ao seu.',
+                    ephemeral: true,
+                });
+            }
+            const punishmentData = await prisma.punishment.findFirst({
+                where: {
+                    guild: interaction.guild.id
+                },
+            });
+            
             await memberToKick.ban();
 
             if (punishmentData?.channel) {
@@ -67,10 +69,10 @@ export default new Command({
                 const punishmentChannel = interaction.guild?.channels.cache.get(interaction.channelId);
                 if (punishmentChannel instanceof TextChannel) {
                     const embeds: (APIEmbed | JSONEncodable<APIEmbed>)[] = [punishmentEmbedMessage];
-                    punishmentChannel.send({embeds});
+                    punishmentChannel.send({ embeds });
                 }
             }
-
+            await prisma.$disconnect();
         } catch (error) {
             return interaction.reply({
                 content: 'Ocorreu um erro ao tentar expulsar o membro.',

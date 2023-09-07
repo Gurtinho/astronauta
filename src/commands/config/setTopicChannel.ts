@@ -1,7 +1,11 @@
 import { Command } from '@src/structs/types/commands';
-import { TopicModel } from '@src/models/topicModel';
-import { ApplicationCommandOptionType, Collection, PermissionFlagsBits, Snowflake, TextChannel } from 'discord.js';
+import {
+    ApplicationCommandOptionType, Collection,
+    PermissionFlagsBits, Snowflake, TextChannel
+} from 'discord.js';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 interface ChannelCache extends Collection<Snowflake, TextChannel> {
   get(id: Snowflake): TextChannel | undefined;
 }
@@ -21,53 +25,60 @@ export default new Command({
     async run({ interaction, options }) {
         if (!interaction.inCachedGuild()) return;
         const channelTopicChannel = options.getChannel('channel', true);
-        if (!interaction.guild.members.me?.permissions.has(['Administrator', 'ManageChannels', 'ManageGuild'])) {
-            interaction.reply({
-                content: `Você não possui permissão pra fazer isso`,
-                ephemeral: true
-            });
-        }
-        const channelTopicData = await TopicModel.findOne({
-            guild: interaction.guild.id
-        }).exec();
-        if (!channelTopicData) {
-            const channelTopicCreated = await TopicModel.create({
-                guild: interaction.guild.id,
-                channel: channelTopicChannel.id
-            });
-            if (channelTopicCreated) {
-                await interaction.reply({
-                    content: `Tópico do canal configurado com sucesso ✅`,
+        try {
+            if (!interaction.guild.members.me?.permissions.has(['Administrator', 'ManageChannels', 'ManageGuild'])) {
+                interaction.reply({
+                    content: `Você não possui permissão pra fazer isso`,
                     ephemeral: true
                 });
-                if (channelTopicChannel instanceof TextChannel) {
-                    await channelTopicChannel.setTopic(`Total de Membros: ${interaction.guild.memberCount}`);
-                }
             }
-        } else {
-            if (interaction.guild.channels.cache) {
-                const channelOld = interaction.guild.channels.cache?.get(channelTopicData.channel);
-                if (channelOld == channelTopicChannel) {
-                    return await interaction.reply({
-                        content: `Esse canal já está configurado`,
-                        ephemeral: true
-                    });
-                }
-                if (channelOld instanceof TextChannel) await channelOld.setTopic('');
-            }
-            const filter = { guild: interaction.guild.id };
-            const update = { channel: channelTopicChannel.id };
-            await TopicModel.updateOne(filter, update);
-            if (channelTopicChannel instanceof TextChannel) {
-                await channelTopicChannel.setTopic(`Total de Membros: ${interaction.guild.memberCount}`);
-            }
-            const msg = await interaction.reply({
-                content: `O canal foi atualizado para #${channelTopicChannel.name}`,
+            // const channelTopicData = await TopicModel.findOne({
+            //     guild: interaction.guild.id
+            // }).exec();
+            // if (!channelTopicData) {
+            //     const channelTopicCreated = await TopicModel.create({
+            //         guild: interaction.guild.id,
+            //         channel: channelTopicChannel.id
+            //     });
+            //     if (channelTopicCreated) {
+            //         await interaction.reply({
+            //             content: `Tópico do canal configurado com sucesso ✅`,
+            //             ephemeral: true
+            //         });
+            //         if (channelTopicChannel instanceof TextChannel) {
+            //             await channelTopicChannel.setTopic(`Total de Membros: ${interaction.guild.memberCount}`);
+            //         }
+            //     }
+            // } else {
+            //     if (interaction.guild.channels.cache) {
+            //         const channelOld = interaction.guild.channels.cache?.get(channelTopicData.channel);
+            //         if (channelOld == channelTopicChannel) {
+            //             return await interaction.reply({
+            //                 content: `Esse canal já está configurado`,
+            //                 ephemeral: true
+            //             });
+            //         }
+            //         if (channelOld instanceof TextChannel) await channelOld.setTopic('');
+            //     }
+            //     const filter = { guild: interaction.guild.id };
+            //     const update = { channel: channelTopicChannel.id };
+            //     await TopicModel.updateOne(filter, update);
+            //     if (channelTopicChannel instanceof TextChannel) {
+            //         await channelTopicChannel.setTopic(`Total de Membros: ${interaction.guild.memberCount}`);
+            //     }
+            //     const msg = await interaction.reply({
+            //         content: `O canal foi atualizado para #${channelTopicChannel.name}`,
+            //         ephemeral: true
+            //     });
+            //     setTimeout(() => {
+            //         msg.delete()
+            //     }, 1500);
+            // }
+        } catch (error) {
+            return interaction.reply({
+                content: 'Ocorreu um erro ao tentar setar o canal de tópico.',
                 ephemeral: true
             });
-            setTimeout(() => {
-                msg.delete()
-            }, 1500);
         }
     }
 });

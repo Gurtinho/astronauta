@@ -3,7 +3,6 @@ import {
     ApplicationCommandOptionType, EmbedBuilder,
     GuildMember, GuildMemberRoleManager, PermissionFlagsBits, Role
 } from 'discord.js';
-import moment from 'moment';
 
 type IGuildMember = Pick<GuildMember, 'roles'> & GuildMemberRoleManager & {
     highest: Role;

@@ -65,11 +65,7 @@ export default new Command({
             await interaction.reply({ embeds: [embed] });
             
         } catch (error) {
-            console.error(error);
-            await interaction.reply({
-                content: 'Ocorreu um erro ao buscar o clima da cidade informada.',
-                ephemeral: true,
-            });
+            console.log(`🔴 An error occurred ${error}`.red);
         }
     },
 });

@@ -2,10 +2,10 @@ import { Command } from '@src/structs/types/commands';
 import axios from 'axios';
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import * as dotenv from 'dotenv';
+dotenv.config();
 
 // define o tempo mínimo entre os comandos (30 segundos)
 const commandCooldown = 30 * 1000;
-
 // armazena o timestamp da última mensagem de comando do usuário
 const lastCommandTimestamps = new Map();
 
@@ -21,10 +21,7 @@ export default new Command({
         }
     ],
     async run({ interaction, options }) {
-        dotenv.config();
-
         const name = options.getString('name', true);
-
         // obtém o timestamp atual
         const now = Date.now();
         // obtém o autor da interação
@@ -33,7 +30,6 @@ export default new Command({
         if (lastCommandTimestamps.has(authorId)) {
             // obtém o último timestamp armazenado para o autor
             const lastTimestamp = lastCommandTimestamps.get(authorId);
-
             // verifica se o tempo mínimo entre os comandos já passou
             if (now - lastTimestamp < commandCooldown) {
                 const remainingTime = commandCooldown - (now - lastTimestamp);
@@ -44,11 +40,9 @@ export default new Command({
                 return;
             }
         }
-
         try {
             const response = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMDB_SECRET_KEY}&language=pt-BR&query=${name}`);
             const movies = response.data.results;
-
             if (movies) {
                 const embed = new EmbedBuilder()
                     .setTitle(`**${movies[0].title}**`)
@@ -56,13 +50,11 @@ export default new Command({
                     .setImage(`https://image.tmdb.org/t/p/w500${movies[0].backdrop_path}`)
             
                 await interaction.reply({ embeds: [embed] });
-
                 // armazena o timestamp atual para o autor da interação
                 lastCommandTimestamps.set(authorId, now);
             }
-
         } catch (error) {
-            console.error(error);
+            console.log(`🔴 An error occurred ${error}`.red);
         }
     },
 });
