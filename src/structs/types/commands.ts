@@ -1,4 +1,4 @@
-import { ClientBot } from '@src/structs/client';
+import { ClientBot } from '.././client';
 import {
     CommandInteractionOptionResolver, ApplicationCommandData, CommandInteraction,
 } from 'discord.js';

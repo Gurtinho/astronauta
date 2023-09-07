@@ -1,4 +1,4 @@
-import { Command } from '@src/structs/types/commands';
+import { Command } from '../../structs/types/commands';
 import { ApplicationCommandOptionType, ApplicationCommandType, ChannelType } from 'discord.js';
 
 export default new Command({

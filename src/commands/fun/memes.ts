@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Command } from '@src/structs/types/commands';
+import { Command } from '../../structs/types/commands';
 import { EmbedBuilder } from 'discord.js';
 
 export default new Command({

@@ -1,4 +1,4 @@
-import { Events } from '@src/structs/types/events';
+import { Events } from '../../structs/types/events';
 
 export default new Events({
     name: 'interactionCreate',

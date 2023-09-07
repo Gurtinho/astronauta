@@ -1,4 +1,4 @@
-import { Command } from '@src/structs/types/commands';
+import { Command } from '../../structs/types/commands';
 import { ApplicationCommandOptionType, ApplicationCommandType, ChannelType, VoiceChannel } from 'discord.js';
 import { PrismaClient } from '@prisma/client';
 

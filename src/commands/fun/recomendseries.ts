@@ -1,4 +1,4 @@
-import { Command } from '@src/structs/types/commands';
+import { Command } from '../../structs/types/commands';
 import axios from 'axios';
 import { EmbedBuilder } from 'discord.js';
 import * as dotenv from 'dotenv';

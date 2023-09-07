@@ -1,4 +1,4 @@
-import { Events } from '@src/structs/types/events';
+import { Events } from '../../structs/types/events';
 import BadWordsFilter from 'bad-words';
 import Filter from 'bad-words';
 

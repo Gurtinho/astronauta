@@ -1,5 +1,5 @@
-import { Command } from '@src/structs/types/commands';
-import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
+import { Command } from '../../structs/types/commands';
+import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
 
 export default new Command({
     name: 'addrole',
@@ -29,12 +29,12 @@ export default new Command({
         const description = options.getString('description', false);
         const emoji = options.getString('emoji', false);
         try {
-            if (role.position >= interaction.member?.highest?.position) {
-                return interaction.reply({
-                    content: 'Você não pode banir um membro com cargo igual ou superior ao seu.',
-                    ephemeral: true,
-                });
-            }
+            // if (role.position >= interaction.member?.) {
+            //     return interaction.reply({
+            //         content: 'Você não pode banir um membro com cargo igual ou superior ao seu.',
+            //         ephemeral: true,
+            //     });
+            // }
         } catch (error) {
             console.log(`🔴 An error occurred ${error}`.red);
         }

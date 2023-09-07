@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "tsc src/bot.ts",
-    "bot": "ts-node-dev --inspect -r tsconfig-paths/register --respawn --transpile-only src/bot.ts"
+    "build": "tsc",
+    "bot": "ts-node-dev --inspect -r tsconfig-paths/register --respawn --transpile-only src/index.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.15.0",

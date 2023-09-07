@@ -1,4 +1,4 @@
-import { Command } from '@src/structs/types/commands';
+import { Command } from '../../structs/types/commands';
 import {
     APIEmbed, ApplicationCommandOptionType, EmbedBuilder,
     GuildMember, GuildMemberRoleManager, JSONEncodable, Role, TextChannel
