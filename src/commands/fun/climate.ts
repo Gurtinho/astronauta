@@ -1,6 +1,6 @@
 import { Command } from '../../structs/types/commands';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
-import { google } from 'googleapis';
+// import { google } from 'googleapis';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 
@@ -36,33 +36,33 @@ export default new Command({
 
         try {
             // Conexão com a api de tempo
-            const response = await axios.get<IWeatherData>(
-                `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=pt_br&units=metric`
-            );
-            const weather = response.data;
+            // const response = await axios.get<IWeatherData>(
+            //     `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=pt_br&units=metric`
+            // );
+            // const weather = response.data;
 
-            const customsearch = google.customsearch('v1');
-            const res = await customsearch.cse.list({
-                cx: process.env.ID_MECANISMO_PESQUISA,
-                q: city,
-                auth: process.env.GOOGLE_API_IMAGES_KEY,
-                searchType: 'image',
-            });
-            const images = res.data?.items?.map((item) => item.link);
+            // const customsearch = google.customsearch('v1');
+            // const res = await customsearch.cse.list({
+            //     cx: process.env.ID_MECANISMO_PESQUISA,
+            //     q: city,
+            //     auth: process.env.GOOGLE_API_IMAGES_KEY,
+            //     searchType: 'image',
+            // });
+            // const images = res.data?.items?.map((item) => item.link);
 
-            const embed = new EmbedBuilder()
-                .setTitle(`Clima em ${weather.name}`)
-                .setDescription(`**${weather.weather[0].description}**`)
-                .addFields({name: 'Temperatura', value: `${weather.main.temp}°C`})
-                .addFields({name: 'Sensação térmica', value: `${weather.main.feels_like}°C`})
-                .addFields({ name: 'Humidade', value: `${weather.main.humidity}%` })
-            if (images) {
-                const randomImage = Math.floor(Math.random() * images.length);
-                const image = images[randomImage];
-                embed.setImage(image!)
-            }
+            // const embed = new EmbedBuilder()
+            //     .setTitle(`Clima em ${weather.name}`)
+            //     .setDescription(`**${weather.weather[0].description}**`)
+            //     .addFields({name: 'Temperatura', value: `${weather.main.temp}°C`})
+            //     .addFields({name: 'Sensação térmica', value: `${weather.main.feels_like}°C`})
+            //     .addFields({ name: 'Humidade', value: `${weather.main.humidity}%` })
+            // if (images) {
+            //     const randomImage = Math.floor(Math.random() * images.length);
+            //     const image = images[randomImage];
+            //     embed.setImage(image!)
+            // }
             
-            await interaction.reply({ embeds: [embed] });
+            // await interaction.reply({ embeds: [embed] });
             
         } catch (error) {
             console.log(`🔴 An error occurred ${error}`.red);
