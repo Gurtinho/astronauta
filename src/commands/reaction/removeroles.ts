@@ -1,5 +1,5 @@
 import { Command } from '../../structs/types/commands';
-import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
+import { ApplicationCommandType } from 'discord.js';
 
 export default new Command({
     name: 'removerole',

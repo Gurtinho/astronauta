@@ -4,8 +4,8 @@ import {
     ApplicationCommandDataResolvable, BitFieldResolvable, Client, ClientEvents,
     Collection, GatewayIntentBits, Partials, GatewayIntentsString
 } from 'discord.js';
-import { CommandType } from '@src/structs/types/commands';
-import { EventType } from '@src/structs/types/events';
+import { CommandType } from './types/commands';
+import { EventType } from './types/events';
 
 class ClientBot extends Client {
     
@@ -31,7 +31,7 @@ class ClientBot extends Client {
                 .filter(fileName => fileName.endsWith('.ts') || fileName.endsWith('.js'))
                 .forEach(async fileName => {
                     try {
-                        const command: CommandType = (await import(`@src/commands/${folder}/${fileName}`))?.default;
+                        const command: CommandType = (await import(`../commands/${folder}/${fileName}`))?.default;
                         const { name } = command;
                         if (name) {
                             this.commands.set(name, command);
