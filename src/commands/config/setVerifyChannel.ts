@@ -3,9 +3,9 @@ import {
     ActionRowBuilder, ApplicationCommandOptionType, ApplicationCommandType,
     ButtonBuilder, ButtonStyle, Embed, EmbedBuilder
 } from 'discord.js';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { Punishment } from '../../database/entities/Punishment';
+import { dataConnection } from '../../database/data-source';
+const verifyRepository = dataConnection.getRepository(Punishment);
 
 export default new Command({
     name: 'verify',

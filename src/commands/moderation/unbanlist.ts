@@ -5,6 +5,9 @@ import {
     EmbedBuilder, TextChannel, JSONEncodable, Role,
     GuildMember, GuildMemberRoleManager, GuildBan, ActionRowBuilder, ButtonBuilder, 
 } from 'discord.js';
+import { Punishment } from '../../database/entities/Punishment';
+import { dataConnection } from '../../database/data-source';
+const punishmentRepository = dataConnection.getRepository(Punishment);
 
 export type IGuildMember = Pick<GuildMember, 'roles'> & GuildMemberRoleManager & {
     highest: Role;
@@ -34,9 +37,9 @@ export default new Command({
             // const username = user!.split('#')[0];
             // const discriminator = user!.split('#')[1];
 
-            // const punishmentData = await PunishmentModel.findOne({
+            // const punishmentData = await punishmentRepository.findOneBy({
             //     channel: interaction.channelId
-            // }).exec();
+            // });
 
             // const bannedUsersList = await interaction.guild?.bans.fetch();
 
@@ -48,9 +51,9 @@ export default new Command({
             //     return interaction.reply('Usuário não encontrado na lista de banidos.');
             // }
 
-            const confirmEmbedMessage = new EmbedBuilder()
-                .setTitle('testando')
-                .setDescription('testando mais ainda');
+            // const confirmEmbedMessage = new EmbedBuilder()
+            //     .setTitle('testando')
+            //     .setDescription('testando mais ainda');
             
             // const confirmButtonMessage = new ActionRowBuilder<ButtonBuilder>({
             //     components: [
@@ -65,10 +68,10 @@ export default new Command({
             //     ]
             // })
             
-            await interaction.reply({
-                embeds: [confirmEmbedMessage],
-                // components: [confirmButtonMessage]
-            });
+            // await interaction.reply({
+            //     embeds: [confirmEmbedMessage],
+            //     components: [confirmButtonMessage]
+            // });
           
             // await interaction.guild?.members.unban(user);
 
@@ -85,7 +88,7 @@ export default new Command({
 
             // if (interaction.channelId != punishmentData?.channel) {
             //     const msg = await interaction.reply({
-            //         content: `Usuário desbanido @${user?.username}`
+            //         content: `Usuário desbanido @${user?.}`
             //     });
             //     setTimeout(() => {
             //         msg.delete();

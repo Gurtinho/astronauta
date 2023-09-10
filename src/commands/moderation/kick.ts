@@ -3,9 +3,9 @@ import {
     APIEmbed, ApplicationCommandOptionType, EmbedBuilder,
     GuildMember, GuildMemberRoleManager, JSONEncodable, Role, TextChannel
 } from 'discord.js';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { Punishment } from '../../database/entities/Punishment';
+import { dataConnection } from '../../database/data-source';
+const punishmentRepository = dataConnection.getRepository(Punishment);
 
 type IGuildMember = Pick<GuildMember, 'roles'> & GuildMemberRoleManager & {
     highest: Role;
@@ -50,11 +50,8 @@ export default new Command({
         }
 
         try {
-            await prisma.$connect();
-            const punishmentData = await prisma.punishment.findFirst({
-                where: {
-                    guild: interaction.guild.id
-                },
+            const punishmentData = await punishmentRepository.findOneBy({
+                guild: interaction.guild.id
             });
             await memberToKick.kick();
 
@@ -80,7 +77,6 @@ export default new Command({
                     msg.delete();
                 }, 3000);
             }
-            await prisma.$disconnect();
         } catch (error) {
             console.error(error);
             return interaction.reply({

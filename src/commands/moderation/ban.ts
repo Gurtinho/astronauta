@@ -3,9 +3,9 @@ import {
     APIEmbed, ApplicationCommandOptionType, EmbedBuilder,
     GuildMember, GuildMemberRoleManager, JSONEncodable, Role, TextChannel,
 } from 'discord.js';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { Punishment } from '../../database/entities/Punishment';
+import { dataConnection } from '../../database/data-source';
+const punishmentRepository = dataConnection.getRepository(Punishment);
 
 export type IGuildMember = Pick<GuildMember, 'roles'> & GuildMemberRoleManager & {
     highest: Role;
@@ -44,19 +44,15 @@ export default new Command({
         const authorRoles = interaction.member?.roles as IGuildMember;
 
         try {
-            await prisma.$connect();
             if (memberToKick.roles.highest.position >= authorRoles.highest.position) {
                 return interaction.reply({
                     content: 'Você não pode banir um membro com cargo igual ou superior ao seu.',
                     ephemeral: true,
                 });
             }
-            const punishmentData = await prisma.punishment.findFirst({
-                where: {
-                    guild: interaction.guild.id
-                },
-            });
-            
+            const punishmentData = await punishmentRepository.findOneBy({
+                guild: interaction.guild.id
+            });       
             await memberToKick.ban();
 
             if (punishmentData?.channel) {
@@ -72,7 +68,6 @@ export default new Command({
                     punishmentChannel.send({ embeds });
                 }
             }
-            await prisma.$disconnect();
         } catch (error) {
             return interaction.reply({
                 content: 'Ocorreu um erro ao tentar expulsar o membro.',

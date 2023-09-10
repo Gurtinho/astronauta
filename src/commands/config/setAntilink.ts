@@ -1,8 +1,5 @@
 import { Command } from '../../structs/types/commands';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 export default new Command({
     name: 'set-antilinks',

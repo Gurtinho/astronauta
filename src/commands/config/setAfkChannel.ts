@@ -1,9 +1,7 @@
 import { Command } from '../../structs/types/commands';
 import { ApplicationCommandOptionType, ApplicationCommandType, ChannelType, VoiceChannel } from 'discord.js';
-import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
-
+// ainda não terminado
 export default new Command({
     name: 'setafk',
     description: 'configure o canal de AFK',
@@ -23,14 +21,12 @@ export default new Command({
         const { guild } = interaction;
         const channel = options.getChannel('channel', true);
         try {
-            await prisma.$connect();
             if (channel instanceof VoiceChannel) {
                 guild.setAFKChannel(channel);
             }
             interaction.reply({
                 content: `Canal de voz AFK definido com sucesso ✅`
             });
-            await prisma.$disconnect();
         } catch (error) {
             return interaction.reply({
                 content: 'Ocorreu um erro ao tentar setar o canal de AFK.',

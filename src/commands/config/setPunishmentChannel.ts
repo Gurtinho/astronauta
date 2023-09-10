@@ -1,8 +1,8 @@
 import { Command } from '../../structs/types/commands';
 import { ApplicationCommandOptionType, TextChannel } from 'discord.js';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { Punishment } from '../../database/entities/Punishment';
+import { dataConnection } from '../../database/data-source';
+const punishmentRepository = dataConnection.getRepository(Punishment);
 
 export default new Command({
     name: 'set-punishment',
@@ -18,7 +18,6 @@ export default new Command({
     ],
     async run({ interaction, options }) {
         try {
-            await prisma.$connect();
             if (!interaction.inCachedGuild()) return;
             const punishmentChannel = options.getChannel('channel', true);
             if (!interaction.guild.members.me?.permissions.has(['Administrator', 'KickMembers'])) {
@@ -27,17 +26,13 @@ export default new Command({
                     ephemeral: true
                 });
             }
-            const punishmentChannelData = await prisma.punishment.findFirst({
-                where: {
-                    guild: interaction.guild.id,
-                },
+            const punishmentChannelData = await punishmentRepository.findOneBy({
+                guild: interaction.guild.id,
             });
             if (!punishmentChannelData) {
-                const punishmentChannelCreated = await prisma.punishment.create({
-                    data: {
-                        guild: interaction.guild.id,
-                        channel: punishmentChannel.id
-                    }
+                const punishmentChannelCreated = await punishmentRepository.save({
+                    guild: interaction.guild.id,
+                    channel: punishmentChannel.id
                 });
                 if (punishmentChannelCreated) {
                     await interaction.reply({
@@ -46,13 +41,11 @@ export default new Command({
                     });
                 }
             } else {
-                const punishmentChannelUpdated = await prisma.punishment.update({
-                    where: {
-                        id: punishmentChannelData.id
-                    },
-                    data: {
-                        channel: punishmentChannel.id
-                    }
+                punishmentChannelData.channel = punishmentChannel.id;
+                const punishmentChannelUpdated = await punishmentRepository.save(punishmentChannelData, {
+                    data: [
+                        'channel' 
+                    ]
                 });
                 if (punishmentChannelUpdated) {
                     await interaction.reply({
@@ -61,7 +54,6 @@ export default new Command({
                     });
                 }
             }
-            await prisma.$disconnect();
         } catch (error) {
             return interaction.reply({
                 content: 'Ocorreu um erro ao tentar setar o canal de punição.',
